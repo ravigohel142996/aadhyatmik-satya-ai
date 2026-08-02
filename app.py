@@ -36,7 +36,7 @@ def search_book(question):
     results = collection.query(query_embeddings=[q_embed], n_results=3)
     return [{"text": doc, "page": meta["page"]} for doc, meta in zip(results["documents"][0], results["metadatas"][0])]
 
-st.markdown("# ॐ आधुनिक सत्य")
+st.markdown("# Adhyatmik Satya")
 question = st.text_input("अपना प्रश्न पूछें...")
 if st.button("उत्तर जानें") and question:
     if not GROQ_API_KEY: st.error("API Key Missing in Streamlit Secrets")
