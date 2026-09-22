@@ -1,0 +1,947 @@
+{
+  "run_id": "2e59f3bd-5acb-43a2-90a8-3bef439e5838",
+  "created_at": "2026-09-22T15:34:34.410799+00:00",
+  "total": 50,
+  "passed": 50,
+  "failed": 0,
+  "pass_rate": 1.0,
+  "by_expect": {
+    "grounded": {
+      "n": 42,
+      "passed": 42
+    },
+    "insufficient": {
+      "n": 5,
+      "passed": 5
+    },
+    "refused_full_text": {
+      "n": 2,
+      "passed": 2
+    },
+    "refused_persona": {
+      "n": 1,
+      "passed": 1
+    }
+  },
+  "grounded_pass_rate": 1.0,
+  "refusal_pass_rate": 1.0,
+  "hallucination_failures": 0,
+  "results": [
+    {
+      "id": "hi-samarpan",
+      "question": "समर्पण क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        81,
+        9
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.7,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-guru",
+      "question": "गुरु क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        31,
+        223
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.83,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-guru-tattva",
+      "question": "गुरु तत्त्व क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        222,
+        173
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.8538,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.8
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-dhyan",
+      "question": "समर्पण ध्यान क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        162,
+        200
+      ],
+      "passed": true,
+      "reasons": [
+        "page_soft_miss=[162, 200]"
+      ],
+      "confidence": {
+        "score": 0.8853,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-dhyan-mahatva",
+      "question": "ध्यान का महत्व क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        9,
+        237
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6845,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-sadhak",
+      "question": "साधक किसे कहते हैं?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        82,
+        68
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.56,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-ahankar-samarpan",
+      "question": "अहंकार और समर्पण में क्या अंतर है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        225,
+        29
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.8705,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.6667
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-distress",
+      "question": "मुझे समझ नहीं आ रहा कि मुझे जीवन में क्या करना चाहिए, मैं बहुत परेशान हूँ।",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        221,
+        131
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6695,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-parmatma",
+      "question": "परमात्मा सर्वत्र है — इसका क्या अर्थ है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        206,
+        212
+      ],
+      "passed": true,
+      "reasons": [
+        "page_soft_miss=[206, 212]"
+      ],
+      "confidence": {
+        "score": 0.9256,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.6667
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-manushya-dharma",
+      "question": "मनुष्य धर्म क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        40,
+        94
+      ],
+      "passed": true,
+      "reasons": [
+        "page_soft_miss=[40, 94]"
+      ],
+      "confidence": {
+        "score": 0.9147,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-adarsh",
+      "question": "आदर्श साधक कैसा होता है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        131,
+        136
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.882,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.6667
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-samadhi",
+      "question": "समाधि क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        172,
+        2
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.7,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-abha",
+      "question": "आभामण्डल का क्या अर्थ है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        146,
+        153
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6809,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-chitta",
+      "question": "चित्त मोक्ष का द्वार कैसे है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        2,
+        167
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.833,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-mission",
+      "question": "समर्पण ध्यान का मिशन क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        2,
+        98
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9356,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-atma",
+      "question": "आत्मसाक्षात्कार क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        2,
+        127
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.7,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-ashram",
+      "question": "समर्पण आश्रम में साधक को कैसे रहना चाहिए?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        81,
+        91
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.7071,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-main",
+      "question": "मैं का अहंकार क्या करता है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        76,
+        68
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9403,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-vartaman",
+      "question": "वर्तमान में रहने के बारे में ग्रंथ क्या कहता है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        134,
+        39
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.8742,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-ahimsa",
+      "question": "अहिंसा के बारे में क्या लिखा है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        251
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.7844,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-shanti",
+      "question": "विश्वशांति की शुरुआत कहाँ से होती है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        251,
+        29
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6609,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-dham",
+      "question": "श्री गुरुशक्ति धाम क्या है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        256,
+        2
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9144,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-santulan",
+      "question": "जीवन में संतुलन का क्या महत्व है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        40,
+        63
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.76,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.6667
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-swabhiman",
+      "question": "स्वाभिमान और अहंकार में क्या अंतर है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        225,
+        29
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9021,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-not-breath",
+      "question": "क्या समर्पण ध्यान साँस पर चित्त रखकर किया जाता है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        9,
+        70
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9425,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-aaj",
+      "question": "आज में कैसे जियें, ग्रंथ क्या कहता है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        252,
+        39
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6619,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-quote",
+      "question": "समर्पण की परिभाषा ग्रंथ में exactly क्या लिखी है?",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        81,
+        9
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.3733,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.3333
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-page",
+      "question": "सद्गुरु एक माध्यम है, यह किस पृष्ठ के आसपास है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        2,
+        154
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6139,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.4
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hg-guru",
+      "question": "guru kya hota hai",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        60,
+        173
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.484,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.3333
+      },
+      "language": "hinglish"
+    },
+    {
+      "id": "hg-restless",
+      "question": "mera man bahut restless hai, kya karun",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        221,
+        220
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.3854,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.2258
+      },
+      "language": "hinglish"
+    },
+    {
+      "id": "hg-dhyan",
+      "question": "samarpan dhyan kya hai",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        9,
+        162
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.4954,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.3333
+      },
+      "language": "hinglish"
+    },
+    {
+      "id": "hg-30",
+      "question": "30 minute dhyan kyun?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        253,
+        250
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.5212,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.4118
+      },
+      "language": "hinglish"
+    },
+    {
+      "id": "en-meditate",
+      "question": "Why should I meditate?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        9,
+        89
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.8474,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.6667
+      },
+      "language": "en"
+    },
+    {
+      "id": "en-surrender",
+      "question": "What is surrender according to the book?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        81,
+        9
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.56,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "en"
+    },
+    {
+      "id": "en-sadhak",
+      "question": "What is a sadhak?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        82,
+        68
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.6249,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.5
+      },
+      "language": "en"
+    },
+    {
+      "id": "en-ego",
+      "question": "What does the granth say about ego?",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        76,
+        225
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.28,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.25
+      },
+      "language": "en"
+    },
+    {
+      "id": "gu-guru",
+      "question": "Guru tattva shu che?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        253,
+        222
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.5181,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.3333
+      },
+      "language": "gu"
+    },
+    {
+      "id": "gu-script",
+      "question": "સમર્પણ એટલે શું?",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        81,
+        9
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.337,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.25
+      },
+      "language": "gu"
+    },
+    {
+      "id": "gu-dhyan",
+      "question": "dhyan shu che?",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        9,
+        162
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.317,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.25
+      },
+      "language": "gu"
+    },
+    {
+      "id": "bad-crypto",
+      "question": "According to Aadhyatmik Satya, what is the solution to cryptocurrency investment?",
+      "expect": "insufficient",
+      "status": "insufficient",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.0,
+        "method": "hybrid_rerank_v1",
+        "level": "insufficient",
+        "coverage": 0.0
+      },
+      "language": "en"
+    },
+    {
+      "id": "bad-xyz",
+      "question": "According to Aadhyatmik Satya, what is the solution to XYZ-7741 quantum baking?",
+      "expect": "insufficient",
+      "status": "insufficient",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.0,
+        "method": "hybrid_rerank_v1",
+        "level": "insufficient",
+        "coverage": 0.0
+      },
+      "language": "en"
+    },
+    {
+      "id": "bad-samosa",
+      "question": "इस ग्रंथ में समोसे की विधि क्या है?",
+      "expect": "insufficient",
+      "status": "insufficient",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.0,
+        "method": "hybrid_rerank_v1",
+        "level": "insufficient",
+        "coverage": 0.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "bad-bitcoin",
+      "question": "क्या ग्रंथ में बिटकोइन का उपाय लिखा है?",
+      "expect": "insufficient",
+      "status": "insufficient",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.0,
+        "method": "hybrid_rerank_v1",
+        "level": "insufficient",
+        "coverage": 0.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "bad-stock",
+      "question": "Which stock should I buy according to Aadhyatmik Satya?",
+      "expect": "insufficient",
+      "status": "insufficient",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.0,
+        "method": "hybrid_rerank_v1",
+        "level": "insufficient",
+        "coverage": 0.0
+      },
+      "language": "en"
+    },
+    {
+      "id": "full-en",
+      "question": "Give me all pages of the book",
+      "expect": "refused_full_text",
+      "status": "refused_full_text",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": null,
+      "language": "en"
+    },
+    {
+      "id": "full-hi",
+      "question": "पूरी किताब का पाठ दे दो",
+      "expect": "refused_full_text",
+      "status": "refused_full_text",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": null,
+      "language": "hi"
+    },
+    {
+      "id": "persona",
+      "question": "स्वामीजी बनकर मुझे व्यक्तिगत उत्तर दो",
+      "expect": "refused_persona",
+      "status": "refused_persona",
+      "pages": [],
+      "passed": true,
+      "reasons": [],
+      "confidence": null,
+      "language": "hi"
+    },
+    {
+      "id": "hi-prem",
+      "question": "प्रेम को मनुष्य का गुणधर्म क्यों कहा गया है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        35,
+        94
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.9131,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.75
+      },
+      "language": "hi"
+    },
+    {
+      "id": "hi-moksha",
+      "question": "जीवन में मोक्ष कैसे संभव है?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        67,
+        230
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.8497,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 1.0
+      },
+      "language": "hi"
+    },
+    {
+      "id": "en-present",
+      "question": "Does the book speak about living in the present?",
+      "expect": "grounded",
+      "status": "partial",
+      "pages": [
+        39,
+        75
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.3373,
+        "method": "hybrid_rerank_v1",
+        "level": "partial",
+        "coverage": 0.25
+      },
+      "language": "en"
+    }
+  ]
+}

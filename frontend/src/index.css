@@ -1,0 +1,57 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: "Tiro Devanagari";
+  src: url("/fonts/TiroDevanagariHindi-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant";
+  src: url("/fonts/CormorantGaramond.ttf") format("truetype");
+  font-weight: 400 700;
+  font-display: swap;
+}
+
+:root {
+  color: #241910;
+  background: #f6f0e6;
+  font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(1200px 500px at 10% -10%, rgba(196, 98, 45, 0.08), transparent 50%),
+    #f6f0e6;
+}
+
+::selection {
+  background: #e7d3a4;
+}
+
+.kicker {
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  color: #a68445;
+}
+
+.paper-card {
+  background: #fbf7f1;
+  border: 1px solid rgba(36, 25, 16, 0.08);
+  box-shadow: 0 24px 60px rgba(36, 25, 16, 0.06);
+}
+
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #c6a15b, transparent);
+}
+
+mark.hit {
+  background: rgba(196, 98, 45, 0.18);
+  color: inherit;
+  padding: 0 0.1em;
+}
