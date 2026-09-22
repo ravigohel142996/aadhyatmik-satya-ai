@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: aadhyatmik-satya-ai
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: ADMIN_TOKEN
+        generateValue: true
+      - key: EMBEDDING_PROVIDER
+        value: local_hash

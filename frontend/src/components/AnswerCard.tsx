@@ -41,7 +41,7 @@ export default function AnswerCard({ answer }: { answer: Answer }) {
               <div className="gold-rule" />
               <section className="bg-[#f3eadc] px-4 py-4">
                 <p className="kicker">{labels.suggestion}</p>
-                <p className="mt-1 text-xs uppercase tracking-wider text-[#8a7564]">AI-generated · not a quotation</p>
+                <p className="mt-1 text-xs uppercase tracking-wider text-[#8a7564]">From the cited granth lines · not Swamiji’s voice</p>
                 <p className="mt-3 whitespace-pre-wrap leading-7 text-[#3a2c24]">{answer.pure_soul_suggestion}</p>
               </section>
             </>

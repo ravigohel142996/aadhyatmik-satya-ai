@@ -21,6 +21,7 @@ HI_STOP = {
     "मतलब", "बताओ", "बताएं", "बताइए", "समझ", "समझाओ", "सरल", "daily", "life",
     "लिखा", "लिखी", "लिखे", "कहता", "कहते", "कहती", "अनुसार", "ग्रंथ", "पुस्तक",
     "शुरुआत", "होने", "दिया", "दिए", "किया", "किए",
+    "करूँ", "करूं", "करुं", "करें", "करो", "कीजिए", "कीजिये", "हूँ", "हूं",
 }
 EN_STOP = {
     "the", "a", "an", "is", "are", "was", "were", "what", "why", "how", "should", "i", "my", "me",
@@ -28,6 +29,8 @@ EN_STOP = {
     "be", "can", "could", "would", "please", "tell", "about", "according", "book", "page", "does",
     "did", "not", "no", "yes", "we", "our", "you", "your", "am", "been", "being", "as", "by",
     "if", "when", "where", "who", "whom", "which", "into", "than", "then", "so", "just", "very",
+    "hu", "hoon", "ho", "hai", "hain", "bahut", "chu", "chhu", "shu", "karu", "karun", "che",
+    "chhe", "nathi", "mane", "tame", "kem", "kone", "please", "mera", "meri", "main",
 }
 ROMAN_CONTENT = {
     "samarpan": ["समर्पण"],
@@ -39,9 +42,14 @@ ROMAN_CONTENT = {
     "meditate": ["ध्यान", "समर्पण"],
     "guru": ["गुरु", "सद्गुरु"],
     "sadguru": ["सद्गुरु", "गुरु"],
-    "tattva": ["तत्त्व", "तत्व", "गुरुतत्व"],
-    "tattwa": ["तत्त्व", "तत्व", "गुरुतत्व"],
+    "tattva": ["तत्त्व", "तत्व"],
+    "tattwa": ["तत्त्व", "तत्व"],
     "tattv": ["तत्त्व", "तत्व"],
+    "dev": ["देव"],
+    "deva": ["देव"],
+    "danav": ["दानव"],
+    "daanav": ["दानव"],
+    "danava": ["दानव"],
     "gurutattva": ["गुरुतत्व", "गुरु", "माध्यम"],
     "gurutattwa": ["गुरुतत्व", "गुरु"],
     "sadhak": ["साधक"],
@@ -108,6 +116,13 @@ ROMAN_CONTENT = {
     "santulan": ["संतुलन"],
     "minute": ["मिनट"],
     "minutes": ["मिनट"],
+    "aaj": ["आज"],
+    "aj": ["आज"],
+    "jiyo": ["जियो"],
+    "jiye": ["जियो"],
+    "jiyen": ["जियो"],
+    "jiyein": ["जियो"],
+    "vartamaan": ["वर्तमान"],
     "chaitanya": ["चैतन्य"],
     "consciousness": ["चैतन्य", "आत्मा"],
     "inner": ["भीतर", "आत्मा"],
@@ -135,11 +150,35 @@ GU_TO_HI = {
     "ધર્મ": "धर्म",
     "પ્રેમ": "प्रेम",
     "મન": "मन",
+    "તત્ત્વ": "तत्त्व",
+    "તત્વ": "तत्व",
+    "ગુરુતત્ત્વ": "गुरुतत्व",
+    "સાધક": "साधक",
+    "દેવ": "देव",
+    "દાનવ": "दानव",
+    "અહિંસા": "अहिंसा",
+    "આજ": "आज",
+    "સમાધિ": "समाधि",
+    "સંસ્કાર": "संस्कार",
+    "સાક્ષી": "साक्षी",
+    "વર્તમાન": "वर्तमान",
+    "પરેશાન": "परेशान",
+    "પરેશાની": "परेशानी",
+    "અશાંત": "अशांत",
+    "અશાંતિ": "अशांति",
+    "બેચેન": "बेचैन",
+    "દુઃખ": "दुःख",
+    "દુખ": "दुख",
+}
+GU_STOP = {
+    "શું", "છે", "એટલે", "કોને", "કહેવાય", "કહે", "ના", "નો", "ની", "માં", "અને", "કે", "તે", "આ", "છો",
+    "છું", "મેં", "બહુ", "હું", "મને",
 }
 DISTRESS_MARKERS = {
     "परेशान", "अशांत", "अशांति", "चिंता", "दुखी", "दुःख", "व्याकुल", "बेचैन", "tension",
     "restless", "anxious", "worried", "pareshan", "pareshani", "चंचल", "समस्या", "मुसीबत",
     "नहीं समझ", "what should i do", "क्या करूँ", "क्या करूं", "क्या करना",
+    "પરેશાન", "પરેશાની", "અશાંત", "અશાંતિ", "બેચેન",
 }
 FOLLOWUP_MARKERS = (
     "इसे", "इसका", "इसको", "यह", "ये", "और बताओ", "सरल", "aur", "iska", "ise", "this",
@@ -171,7 +210,7 @@ def tokenize(text: str) -> list[str]:
 def content_tokens(text: str) -> list[str]:
     out = []
     for tok in tokenize(text):
-        if tok in HI_STOP or tok in EN_STOP:
+        if tok in HI_STOP or tok in EN_STOP or tok in GU_STOP:
             continue
         if tok.isdigit():
             continue
@@ -189,7 +228,7 @@ def detect_language(text: str) -> str:
     if dev > 2 and dev >= lat * 0.4:
         return "hi"
     low = t.lower()
-    roman_gu = any(m in low for m in (" shu ", "shu che", "chhe", " nathi", " tame ", " mane ", " kem "))
+    roman_gu = any(m in f" {low} " for m in ("shu", "chhe", "nathi", "tame", "mane", "kem", "kone", "kahevay", "kahevay?", "shu?"))
     if roman_gu or low.strip().endswith("che?") or " shu che" in f" {low}":
         return "gu-roman"
     hinglish_markers = ("kya", "hai", "hota", "hoti", "mera", "meri", "kyun", "kyu", "kaise", "nahi", "nahin", "bahut", "mein", "main ", "karu", "karun")
@@ -215,7 +254,8 @@ def is_definition_query(text: str) -> bool:
         m in low
         for m in (
             "क्या है", "क्या होता", "क्या होती", "किसे कहते", "किसे कह", "what is", "who is",
-            "shu che", "એટલે", "meaning", "define", "परिभाषा", "अर्थ क्या", "kya hai", "kya hota",
+            "shu che", "એટલે", "શું છે", "કોને કહે", "meaning", "define", "परिभाषा", "अर्थ क्या",
+            "kya hai", "kya hota", "shu chhe", "kahevay", "kone kahe", "kya hota hai",
         )
     )
 
@@ -256,6 +296,60 @@ def question_supported(text: str, df: dict[str, int]) -> bool:
     return True
 
 
+def _tokens(text: str) -> set[str]:
+    return set(tokenize(text))
+
+
+def _mentions_guru(text: str) -> bool:
+    tokens = _tokens(text)
+    blob = text or ""
+    return bool(tokens & {"guru", "sadguru", "gurutattva", "gurutattwa"}) or "गुरु" in blob or "ગુરુ" in blob
+
+
+def _mentions_dev_danav(text: str) -> bool:
+    tokens = _tokens(text)
+    return bool(tokens & {"dev", "deva", "danav", "daanav", "danava"}) or "दानव" in (text or "") or "देव तत्त्व" in (text or "") or "देव तत्व" in (text or "")
+
+
+def focus_phrases(text: str) -> list[str]:
+    """Compounds the question actually names. Used so tattva does not collapse into guru tattva."""
+    tokens = _tokens(text)
+    blob = text or ""
+    has_tattva = bool(tokens & {"tattva", "tattwa", "tattv", "तत्व", "तत्त्व"}) or "तत्त्व" in blob or "तत्व" in blob
+    phrases = []
+    if has_tattva and (bool(tokens & {"dev", "deva"}) or "देव तत्त्व" in blob or "देव तत्व" in blob):
+        phrases.append("देव तत्त्व")
+    if has_tattva and (bool(tokens & {"danav", "daanav", "danava"}) or "दानव" in blob):
+        phrases.append("दानव तत्त्व")
+    if (has_tattva or "તત્ત્વ" in blob or "તત્વ" in blob) and _mentions_guru(blob) and not _mentions_dev_danav(blob):
+        phrases.append("गुरुतत्व")
+    return phrases
+
+
+def preferred_phrases(text: str) -> list[str]:
+    """Phrases to boost, without refusing an answer when they are absent."""
+    tokens = _tokens(text)
+    blob = text or ""
+    low = blob.lower()
+    out = []
+    live = bool(tokens & {"jiyo", "jiye", "jiyen", "jiyein", "jio", "live"}) or "जिय" in blob
+    today = bool(tokens & {"aaj", "aj", "present", "vartaman", "vartamaan"}) or "आज" in blob or "वर्तमान" in blob
+    if (live and today) or ({"aaj", "aj"} & tokens and "mein" in tokens):
+        out.append("आज में")
+    if any(k in low for k in ("30", "minute", "minutes", "मिनट")) and any(
+        k in low for k in ("dhyan", "ध्यान", "meditation", "minute", "मिनट")
+    ):
+        out.append("30 मिनट")
+    return out
+
+
+def mapped_terms(tok: str, text: str) -> list[str]:
+    mapped = list(ROMAN_CONTENT.get(tok, []))
+    if tok in {"tattva", "tattwa", "tattv"} and _mentions_guru(text) and not _mentions_dev_danav(text):
+        mapped.append("गुरुतत्व")
+    return mapped
+
+
 def query_phrases(text: str) -> list[str]:
     tokens = tokenize(text)
     phrases = []
@@ -279,14 +373,14 @@ def primary_terms(text: str) -> list[str]:
     for tok in content_tokens(text):
         if tok not in terms:
             terms.append(tok)
-        for mapped in ROMAN_CONTENT.get(tok, []):
+        for mapped in mapped_terms(tok, text):
             if mapped not in terms:
                 terms.append(mapped)
     for gu, hi in GU_TO_HI.items():
         if gu in (text or "") and hi not in terms:
             terms.append(hi)
     blob = text or ""
-    if "गुरु" in blob and ("तत्त्व" in blob or "तत्व" in blob or "tattva" in blob.lower()):
+    if "गुरु" in blob and ("तत्त्व" in blob or "तत्व" in blob or "tattva" in blob.lower()) and not _mentions_dev_danav(blob):
         for extra in ("गुरुतत्व", "गुरु", "माध्यम"):
             if extra not in terms:
                 terms.append(extra)
@@ -303,13 +397,16 @@ def expand_query(text: str) -> tuple[list[str], dict[str, float]]:
     original = content_tokens(text)
     for tok in original:
         weights[tok] = max(weights.get(tok, 0), 3.0)
-        mapped = ROMAN_CONTENT.get(tok)
+        mapped = mapped_terms(tok, text)
         if mapped:
             for m in mapped:
                 weights[m] = max(weights.get(m, 0), 2.4)
     for gu, hi in GU_TO_HI.items():
         if gu in (text or ""):
             weights[hi] = max(weights.get(hi, 0), 2.6)
+    if any(p == "गुरुतत्व" for p in focus_phrases(text)):
+        weights["गुरुतत्व"] = max(weights.get("गुरुतत्व", 0), 3.2)
+        weights["माध्यम"] = max(weights.get("माध्यम", 0), 1.6)
     low = (text or "").lower()
     if any(k in low for k in ("30", "तीस", "minute", "मिनट")) and any(
         k in low for k in ("dhyan", "ध्यान", "meditation", "minute", "मिनट")
@@ -321,6 +418,10 @@ def expand_query(text: str) -> tuple[list[str], dict[str, float]]:
         for extra in ("अशांति", "अशांत", "चिंता", "शांति", "समस्या", "वर्तमान", "साक्षी", "चित्त", "मुसीबत"):
             weights[extra] = max(weights.get(extra, 0), 1.15)
         weights["जीवन"] = max(weights.get("जीवन", 0), 1.4)
+    tokens = set(tokenize(text))
+    if tokens & {"live", "jiyo", "jiye", "jiyen", "jiyein", "jio"} or "जिय" in (text or ""):
+        weights["जियो"] = max(weights.get("जियो", 0), 2.2)
+        weights["आज"] = max(weights.get("आज", 0), 2.0)
     if any(k in low for k in ("अंतर", "difference", " farq", "versus", " vs ")):
         weights["अंतर"] = max(weights.get("अंतर", 0), 1.2)
     tokens = [t for t, w in weights.items() if w > 0 and t not in HI_STOP and t not in EN_STOP]
@@ -347,6 +448,38 @@ def split_sentences(text: str) -> list[str]:
         if len(p) >= 12:
             out.append(p)
     return out or [text]
+
+
+def prose_sentences(text: str) -> list[str]:
+    """Join OCR line breaks so a definition split across lines stays one sentence."""
+    text = clean_whitespace(text)
+    if not text:
+        return []
+    text = re.sub(r"(?<![।!?])\n+", " ", text)
+    text = re.sub(r"[ \t]{2,}", " ", text)
+    parts = re.split(r"(?<=[।!?])\s+", text)
+    out = [p.strip() for p in parts if len(p.strip()) >= 12]
+    return out or [text]
+
+
+_DEF_AFTER = re.compile(r"^['’\"“”\s]{0,4}(यानी|अर्थात्|कहलाता|कहलाती|होती है|है यानी)")
+
+
+def term_is_defined(text: str, term: str) -> bool:
+    """True when this term is the subject of a definition, not a passing mention."""
+    if not text or not term or term not in text:
+        return False
+    for match in re.finditer(re.escape(term), text):
+        tail = text[match.end() : match.end() + 18]
+        if _DEF_AFTER.match(tail):
+            rest = text[match.end() : match.end() + 36]
+            if "नहीं" in rest[:16]:
+                continue
+            return True
+        window = text[match.start() : match.end() + 36]
+        if "पद्धति नहीं" in window or "माध्यम है" in window:
+            return True
+    return False
 
 
 def stable_hash(token: str) -> int:

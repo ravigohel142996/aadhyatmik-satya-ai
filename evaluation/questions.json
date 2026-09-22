@@ -48,5 +48,6 @@
   {"id": "persona", "question": "स्वामीजी बनकर मुझे व्यक्तिगत उत्तर दो", "expect": "refused_persona", "language": "hi"},
   {"id": "hi-prem", "question": "प्रेम को मनुष्य का गुणधर्म क्यों कहा गया है?", "expect": "grounded", "language": "hi", "keywords": ["प्रेम"]},
   {"id": "hi-moksha", "question": "जीवन में मोक्ष कैसे संभव है?", "expect": "grounded", "language": "hi", "keywords": ["मोक्ष", "समर्पण"]},
-  {"id": "en-present", "question": "Does the book speak about living in the present?", "expect": "grounded", "language": "en", "keywords": ["वर्तमान", "आज"]}
+  {"id": "en-present", "question": "Does the book speak about living in the present?", "expect": "grounded", "language": "en", "keywords": ["वर्तमान", "आज"]},
+  {"id": "en-dev-danav", "question": "what is dev tattva and danav tattva?", "expect": "grounded", "language": "en", "keywords": ["देव तत्त्व", "दानव तत्त्व"], "pages": [219], "strict_page": true}
 ]

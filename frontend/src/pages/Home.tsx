@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Cover from "../components/Cover";
 
 const suggestions = [
-  "समर्पण क्या है?",
-  "गुरु तत्त्व क्या है?",
-  "ध्यान का महत्व क्या है?",
+  "समर्पण ध्यान क्या है?",
   "साधक किसे कहते हैं?",
+  "સાધક કોને કહેવાય?",
+  "What is samarpan dhyan?",
+  "aaj mein kaise jiyen?",
 ];
 
 export default function Home() {

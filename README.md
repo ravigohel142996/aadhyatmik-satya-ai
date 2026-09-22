@@ -45,6 +45,16 @@ Or: `sh scripts/dev.sh`
 
 The first start builds the SQLite index from `book_chunks.json`. No API key is required. Without `LLM_API_KEY` and `LLM_API_BASE`, answers stay extractive: the granth’s own sentences, plus a clearly labeled suggestion.
 
+## Free public deploy
+
+One container serves the site and the API. No paid plan and no LLM key are required. The free host sleeps when idle and rebuilds the SQLite index from `book_chunks.json` on wake.
+
+After this branch is on GitHub, open:
+
+https://render.com/deploy?repo=https://github.com/ravigohel142996/aadhyatmik-satya-ai
+
+Use the free web service. The first start can take a few minutes. The public URL is the Render URL, not a claim that all 270 printed pages are online.
+
 ## Docker
 
 ```bash

@@ -9,6 +9,8 @@ from datetime import datetime, timezone
 
 from app.config import settings
 from app.db import get_conn
+from app.services.gloss import close_reading
+from app.services.practice import granth_practice
 from app.services.index import INDEX
 from app.services.llm import LLMError, complete_json, llm_configured
 from app.services.textutil import (
@@ -18,10 +20,14 @@ from app.services.textutil import (
     expand_query,
     is_definition_query,
     is_distress_query,
+    focus_phrases,
     is_followup,
+    preferred_phrases,
     primary_terms,
     question_supported,
+    prose_sentences,
     split_sentences,
+    term_is_defined,
 )
 
 log = logging.getLogger("aadhyatmik.answer")
@@ -112,9 +118,16 @@ def _page_text(page_number: int) -> tuple[str, str | None, str | None, str | Non
     return row["original_ocr"] or row["cleaned_text"] or "", row["chapter"], row["drive_file_id"], row["ocr_note"]
 
 
-def _best_window(page_text: str, terms: list[str], limit: int = 620, primary: list[str] | None = None) -> str:
-    text = page_text or ""
-    sentences = split_sentences(text)
+def _best_window(
+    page_text: str,
+    terms: list[str],
+    limit: int = 620,
+    primary: list[str] | None = None,
+    focus: list[str] | None = None,
+) -> str:
+    text = re.sub(r"(?<![।!?])\n+", " ", page_text or "")
+    text = re.sub(r"[ \t]{2,}", " ", text).strip()
+    sentences = prose_sentences(text)
     if not sentences:
         return ""
     primary = primary or []
@@ -124,26 +137,43 @@ def _best_window(page_text: str, terms: list[str], limit: int = 620, primary: li
             continue
         score = sum(1.2 if t in sent else 0 for t in terms)
         score += sum(6.0 if t in sent else 0 for t in primary if t not in {"जीवन"})
-        if any(c in sent for c in ("यानी", "सौंप देना", "माध्यम है", "गुणधर्म", "एक संस्कार", "अशांति", "चिंता मत", "अशांत")):
+        if any(term_is_defined(sent, t) for t in primary):
+            score += 14
+        if any(c in sent for c in ("यानी", "सौंप देना", "माध्यम है", "गुणधर्म", "एक संस्कार", "अशांति", "अशांत", "पद्धति नहीं")) and any(t in sent for t in primary):
             score += 5
         if "परेशान" in primary and "जीवन" in sent and "अशांति" not in sent and "अशांत" not in sent and "चिंता" not in sent:
             score -= 3
         if any(f"{t} है" in sent for t in primary):
             score += 4
+        if focus and any(phrase in sent for phrase in focus):
+            score += 8 + 6 * sum(phrase in sent for phrase in focus)
+        if "आज में जियो" in sent or "पद्धति नहीं" in sent or "सौंप देना" in sent:
+            score += 6
+        if "अपराध" in sent:
+            score -= 14
         score += min(len(sent), 180) / 400
         scored.append((score, i))
     scored.sort(reverse=True)
     if not scored or scored[0][0] <= 0:
         return ""
     center = scored[0][1]
-    anchor = sentences[center]
+    start_at = center
+    if center > 0 and (
+        any(term_is_defined(sentences[center - 1], t) for t in primary)
+        or sentences[center].startswith(("ठीक वैसे", "इसीलिए", "इसलिए", "बस,"))
+    ):
+        start_at = center - 1
+    anchor = sentences[start_at]
     idx = text.find(anchor)
     if idx < 0:
-        return anchor[:limit]
+        return _verbatim_span(page_text or "", anchor, anchor, limit) or anchor[:limit]
     end = idx + len(anchor)
-    for j in range(center + 1, min(len(sentences), center + 3)):
+    last = start_at
+    for j in range(start_at + 1, min(len(sentences), start_at + 3)):
         nxt = sentences[j]
-        if _toc_line(nxt):
+        if _toc_line(nxt) or _next_point(nxt, primary):
+            break
+        if nxt.strip().startswith(("-", "–", "श्री शिव")):
             break
         pos = text.find(nxt, end)
         if pos < 0 or pos - end > 16:
@@ -151,10 +181,55 @@ def _best_window(page_text: str, terms: list[str], limit: int = 620, primary: li
         if pos + len(nxt) - idx > limit:
             break
         end = pos + len(nxt)
-    excerpt = text[idx:end].strip()
+        last = j
+    return _verbatim_span(page_text or "", sentences[start_at], sentences[last], limit)
+
+
+def _verbatim_span(original: str, start_sent: str, end_sent: str, limit: int) -> str:
+    """Return a substring of the stored page, so the quotation can be found on that page."""
+    chars: list[str] = []
+    mapping: list[int] = []
+    for i, ch in enumerate(original or ""):
+        if ch.isspace():
+            continue
+        chars.append(ch)
+        mapping.append(i)
+    if not mapping:
+        return ""
+    blob = "".join(chars)
+    start_key = re.sub(r"\s+", "", start_sent)[:32]
+    end_key = re.sub(r"\s+", "", end_sent)[-28:]
+    start = blob.find(start_key)
+    if start < 0:
+        return ""
+    end = blob.find(end_key, start)
+    if end < 0:
+        end = min(len(blob), start + len(re.sub(r"\s+", "", start_sent)))
+    else:
+        end = min(len(blob), end + len(end_key))
+    excerpt = original[mapping[start] : mapping[end - 1] + 1].strip()
     if len(excerpt) > limit:
         excerpt = excerpt[:limit].rstrip()
     return excerpt
+
+
+def _leading_clause(page_text: str) -> str:
+    text = (page_text or "").strip()
+    if not text:
+        return ""
+    cut = text.find("।")
+    clause = text if cut < 0 else text[: cut + 1]
+    clause = clause.strip()
+    if len(clause) < 8 or len(clause) > 280:
+        return ""
+    return clause
+
+
+def _next_point(sent: str, primary: list[str]) -> bool:
+    s = sent.strip()
+    if re.match(r"^[(（]?[०-९0-9]{1,3}[)）.]", s) and not any(t in s for t in primary):
+        return True
+    return False
 
 
 def _toc_line(sent: str) -> bool:
@@ -212,92 +287,74 @@ def _themes(text: str) -> set[str]:
     return found
 
 
+def _instruction_line(text: str) -> str:
+    cues = ("करो", "जियो", "रहो", "छोड़", "मत ", "कीजिए", "हो जाएँ", "समर्पित")
+    for sent in split_sentences(text or ""):
+        if "अपराध" in sent:
+            continue
+        if any(cue in sent for cue in cues) and 18 <= len(sent) <= 180:
+            return sent.strip()
+    return ""
+
+
 def _suggestion(lang: str, text: str) -> str:
-    themes = _themes(text)
-    bits_hi = []
-    bits_en = []
-    bits_gu = []
-    bits_hg = []
-    if "अशांति" in themes or "समस्या" in themes:
-        bits_hi.append("इन पंक्तियों में भीतर की अशांति, चिंता या समस्या की बात है। आप इन्हें धीरे पढ़कर कुछ समय शांत बैठ सकते हैं।")
-        bits_en.append("These lines speak of inner unrest, worry, or difficulty. You may read them slowly and sit quietly for a while.")
-        bits_gu.append("આ પંક્તિઓમાં અંદરની અશાંતિ અથવા ચિંતાની વાત છે. તમે તેને ધીમે વાંચીને થોડી વાર શાંત બેસી શકો છો.")
-        bits_hg.append("In panktiyon mein andar ki ashanti ya chinta ki baat hai. Aap inhe dheere padhkar thodi der shaant baith sakte hain.")
-    if "वर्तमान" in themes:
-        bits_hi.append("ग्रंथ वर्तमान में रहने की बात रखता है। आज के इस क्षण को जल्दी से भरने की कोशिश किए बिना, केवल पढ़े गए अंश पर मनन किया जा सकता है।")
-        bits_en.append("The granth speaks of remaining in the present. You may stay with the cited lines instead of rushing to fill the moment.")
-        bits_gu.append("ગ્રંથ વર્તમાનમાં રહેવાની વાત રાખે છે. ટાંકેલી પંક્તિઓ પર જ મનન કરી શકાય.")
-        bits_hg.append("Granth vartaman mein rehne ki baat rakhta hai. Cited lines par hi manan kar sakte hain.")
-    if "ध्यान" in themes or "समर्पण" in themes:
-        bits_hi.append("यदि ये अंश ध्यान या समर्पण की बात करते हैं, तो अपेक्षा रखे बिना उन शब्दों पर मनन करना एक शांत अभ्यास हो सकता है। अवधि या फल यहाँ जोड़ा नहीं गया है।")
-        bits_en.append("If these lines speak of meditation or surrender, reflecting on those words without expectation can be a quiet practice. No duration or result is added here.")
-        bits_gu.append("જો આ અંશો ધ્યાન અથવા સમર્પણની વાત કરે, તો અપેક્ષા વિના તે શબ્દો પર મનન કરી શકાય. અહીં કોઈ ફળની ખાતરી નથી.")
-        bits_hg.append("Agar ye ansh dhyan ya samarpan ki baat karte hain, to bina expectation un shabdon par manan kar sakte hain. Koi guarantee nahi hai.")
-    if "मैं" in themes:
-        bits_hi.append("जहाँ ग्रंथ ‘मैं’ या अहंकार की बात करता है, वहाँ केवल उसी बात को ध्यान से पढ़ना पर्याप्त है। नया उपदेश नहीं जोड़ा गया।")
-        bits_en.append("Where the granth speaks of ‘I’ or ego, reading that passage carefully is enough. No new teaching is added.")
-        bits_gu.append("જ્યાં ગ્રંથ ‘હું’ અથવા અહંકારની વાત કરે છે, ત્યાં એ જ વાંચવું પૂરતું છે.")
-        bits_hg.append("Jahan granth ‘main’ ya ahankar ki baat karta hai, wahan wahi dhyan se padhna kaafi hai.")
-    if not bits_hi:
-        bits_hi.append("आप इन पृष्ठों को शांत मन से पढ़कर केवल लिखी हुई बात पर मनन कर सकते हैं।")
-        bits_en.append("You may read these pages quietly and reflect only on what is written.")
-        bits_gu.append("તમે આ પાનાં શાંત મને વાંચીને માત્ર લખેલી વાત પર મનન કરી શકો છો.")
-        bits_hg.append("Aap in pages ko shaant man se padhkar sirf likhi hui baat par manan kar sakte hain.")
+    practice = granth_practice(lang, text)
+    if practice:
+        return practice
+    line = _instruction_line(text)
     if lang == "en":
-        body = " ".join(bits_en[:3])
-        return (
-            "This is not a quotation and not Swamiji’s voice. It is a gentle AI reflection consistent with the retrieved lines. "
-            "It is not medical, psychological, legal, or financial advice, and it promises no result. " + body
-        )
+        lead = "According to the lines above, the practice is what those words already say."
+        if line:
+            lead = f"According to the lines above, keep to this: {line}"
+        return lead + " This is not Swamiji’s personal instruction, and no extra result has been added."
     if lang == "gu":
-        body = " ".join(bits_gu[:3])
-        return (
-            "આ સૂચન સ્વામીજીનું વાક્ય નથી. આ AI દ્વારા, ઉપરના ગ્રંથ-અંશને અનુરૂપ, એક શાંત વિચાર છે. "
-            "તેમાં કોઈ ફળની ખાતરી નથી, અને તે તબીબી સલાહ નથી. " + body
-        )
+        lead = "ઉપરની પંક્તિઓ પ્રમાણે કરવાની વાત એ જ શબ્દોમાં છે."
+        if line:
+            lead = f"ઉપરની પંક્તિઓ પ્રમાણે આ રાખો: {line}"
+        return lead + " આ સ્વામીજીનો અંગત આદેશ નથી."
     if lang == "hinglish":
-        body = " ".join(bits_hg[:3])
-        return (
-            "Yeh suggestion Swamiji ka kathan nahi hai. Yeh AI dwara diya gaya shaant vichar hai, upar diye granth-ansh ke anuroop. "
-            "Koi guarantee nahi hai, aur yeh medical advice nahi hai. " + body
-        )
-    body = " ".join(bits_hi[:3])
-    return (
-        "यह सुझाव स्वामीजी का कथन नहीं है। यह AI द्वारा दिया गया शांत चिंतन है, ऊपर दिए गए ग्रंथ-अंश के अनुरूप। "
-        "किसी फल की गारंटी नहीं है। यह चिकित्सा, मनोवैज्ञानिक, कानूनी या आर्थिक सलाह नहीं है। " + body
-    )
+        lead = "Upar ki panktiyon ke anusar practice wahi hai jo un shabdon mein hai."
+        if line:
+            lead = f"Upar ki panktiyon ke anusar aap yeh rakho: {line}"
+        return lead + " Yeh Swamiji ka personal order nahi hai, aur koi extra benefit joda nahi gaya."
+    lead = "ऊपर की पंक्तियों के अनुसार करने की बात उन्हीं शब्दों में है।"
+    if line:
+        lead = f"ऊपर की पंक्तियों के अनुसार यह रखें: {line}"
+    return lead + " यह स्वामीजी का व्यक्तिगत आदेश नहीं है, और कोई अलग फल जोड़ा नहीं गया।"
 
 
-def _explain(lang: str, sentences: list[str]) -> str:
+def _frame(lang: str, gloss: str | None) -> str:
+    if lang == "en":
+        return gloss or "The answer is the quotation above, kept in the granth’s language. Nothing beyond those lines has been added."
+    if lang == "gu":
+        return gloss or "જવાબ ઉપરના ઉદ્ધરણમાં છે. ઉદ્ધરણ ગ્રંથની મૂળ ભાષામાં રાખ્યું છે. આ ઉપરાંત કોઈ નવી વાત ઉમેરાઈ નથી."
+    if lang == "hinglish":
+        return gloss or "Jawab upar diye quotation mein hai. Quotation granth ki bhasha mein hai. Uske aage koi nayi baat nahi jodi gayi."
+    return gloss or "उत्तर ऊपर दिए गए उद्धरण में है। उद्धरण ग्रंथ की भाषा में है। उसके आगे कोई नई बात नहीं जोड़ी गई।"
+
+
+def _explain(lang: str, sentences: list[str], excerpt: str = "") -> str:
     shown = sentences[:3]
+    gloss = close_reading(lang, excerpt or " ".join(shown))
+    note = {
+        "en": "Original lines:",
+        "gu": "મૂળ પંક્તિઓ:",
+        "hinglish": "Mool panktiyan:",
+        "hi": "मूल पंक्तियाँ:",
+    }.get(lang, "मूल पंक्तियाँ:")
     bullets = "\n".join(f"• {s}" for s in shown)
-    if lang == "en":
-        return (
-            "Read in the granth’s own words, the relevant lines say this. Nothing beyond these lines has been added.\n\n"
-            + bullets
-        )
-    if lang == "gu":
-        return (
-            "ગ્રંથની જ પંક્તિઓમાં વાત આ રીતે છે. આ ઉપરાંત કોઈ નવી શિક્ષા ઉમેરાઈ નથી.\n\n" + bullets
-        )
-    if lang == "hinglish":
-        return (
-            "Granth ki in panktiyon ko seedhe padhein. Neeche wahi shabd hain — koi nayi baat nahi jodi gayi.\n\n"
-            + bullets
-        )
-    return (
-        "ग्रंथ के इन अंशों को सरल क्रम में पढ़ें। नीचे वही शब्द हैं — कोई नई शिक्षा जोड़ी नहीं गई है।\n\n" + bullets
-    )
+    return _frame(lang, gloss) + "\n\n" + note + "\n" + bullets
 
 
 def _quote_label(page: int, excerpt: str) -> tuple[str, str]:
     if page == 3:
         return "ग्रंथ का अंश", "यह पृष्ठ अनुरोध है, गुरुमाँ के हस्ताक्षर के साथ। इसे स्वामीजी का कथन नहीं माना गया।"
     if page >= 253:
-        if "शिवकृपानंद स्वामीजी" in excerpt and excerpt.strip().startswith("“"):
-            return LABELS["quote"], "यह अंश पृष्ठ पर उद्धरण के रूप में है। आसपास का संपादकीय पाठ अलग है। OCR/source text requires verification."
-        return "ग्रंथ का अंश", "यह पृष्ठ परिशिष्ट/संपादकीय पाठ जैसा है। जब तक उद्धरण चिह्न और नाम साथ न हों, इसे स्वामीजी का प्रत्यक्ष कथन नहीं माना गया। OCR/source text requires verification."
-    return LABELS["quote"], "Indexed source text. OCR/source text requires verification."
+        return (
+            "ग्रंथ का अंश",
+            "This later page mixes editorial lines and named quotations. Indexed text — verify on the source page.",
+        )
+    return LABELS["quote"], "Indexed text — verify on the source page."
 
 
 def _public_trace(hits: list[dict]) -> list[dict]:
@@ -383,7 +440,32 @@ async def answer_question(question: str, conversation_id: str | None = None) -> 
     if not weights:
         weights = {t: 1.0 for t in (primary or question.split()[:6] or ["आध्यात्मिक"])}
     intent = "definition" if is_definition_query(question) else "distress" if is_distress_query(question) else None
+    if intent == "distress":
+        primary = [t for t in primary if t not in {"जीवन", "समझ", "करना"}]
+        if "जीवन" in weights:
+            weights["जीवन"] = min(weights["जीवन"], 0.45)
+    focus = focus_phrases(question)
     hits = INDEX.search(search_text, weights, limit=6, primary=primary, intent=intent)
+    if focus:
+        focused = [
+            hit
+            for hit in hits
+            if any(phrase in ((hit["chunk"].cleaned_text or "") + (hit["chunk"].text or "")) for phrase in focus)
+        ]
+        if not focused:
+            return _insufficient(lang, answer_id, conversation_id, question, hits, _confidence(None), started, detected)
+        hits = focused
+    if intent == "distress":
+        guided = []
+        for hit in hits:
+            blob = (hit["chunk"].cleaned_text or "") + (hit["chunk"].text or "")
+            if "अपराध" in blob and "अशांति" not in blob:
+                continue
+            if any(k in blob for k in ("अशांति", "अशांत", "चिंता", "आज में", "साक्षी")):
+                guided.append(hit)
+        if not guided:
+            return _insufficient(lang, answer_id, conversation_id, question, hits, _confidence(None), started, detected)
+        hits = guided
     conf = _confidence(hits[0] if hits else None)
     level = conf["level"] if conf else "insufficient"
     grounded = level in {"strong", "partial"} and bool(hits and hits[0].get("hits"))
@@ -402,8 +484,11 @@ async def answer_question(question: str, conversation_id: str | None = None) -> 
     terms = list(weights.keys())
     for page in top_pages:
         original, chapter, drive_id, ocr_note = _page_text(page)
-        excerpt = _best_window(original or "", terms, primary=primary)
+        excerpt = _best_window(original or "", terms, primary=primary, focus=focus)
         if not excerpt:
+            continue
+        wanted = preferred_phrases(question)
+        if passages and wanted and not any(phrase in excerpt for phrase in wanted):
             continue
         label, verify = _quote_label(page, excerpt)
         passages.append(
@@ -426,6 +511,32 @@ async def answer_question(question: str, conversation_id: str | None = None) -> 
                 "drive_file_id": drive_id,
             }
         )
+        page_ends = (original or "").rstrip()
+        cut_off = excerpt and page_ends.endswith(excerpt[-12:]) and not excerpt.rstrip().endswith(("।", "?", "!", "॥", "”", '"'))
+        if cut_off and page + 1 not in {c["page"] for c in citations}:
+            nxt, nxt_chapter, nxt_drive, nxt_note = _page_text(page + 1)
+            extra = _leading_clause(nxt)
+            if extra and extra in (nxt or ""):
+                passages.append(
+                    {
+                        "page": page + 1,
+                        "chapter": nxt_chapter,
+                        "excerpt": extra,
+                        "label": _quote_label(page + 1, extra)[0],
+                        "verification": "Indexed text — verify on the source page. Continues the previous page.",
+                        "drive_file_id": nxt_drive,
+                        "ocr_note": nxt_note,
+                    }
+                )
+                citations.append(
+                    {
+                        "page": page + 1,
+                        "book": settings.book_title,
+                        "chapter": nxt_chapter,
+                        "chunk_id": None,
+                        "drive_file_id": nxt_drive,
+                    }
+                )
     if not passages:
         return _insufficient(lang, answer_id, conversation_id, question, hits, conf, started, detected)
 
@@ -433,7 +544,8 @@ async def answer_question(question: str, conversation_id: str | None = None) -> 
     sentences = []
     for p in passages:
         sentences.extend(split_sentences(p["excerpt"])[:2])
-    explanation = _explain(lang, sentences)
+    lead = split_sentences(passages[0]["excerpt"]) or sentences
+    explanation = _explain(lang, lead, passages[0]["excerpt"])
     suggestion = _suggestion(lang, quote)
     llm = await _maybe_llm(
         question,

@@ -1,14 +1,14 @@
 {
-  "run_id": "2e59f3bd-5acb-43a2-90a8-3bef439e5838",
-  "created_at": "2026-09-22T15:34:34.410799+00:00",
-  "total": 50,
-  "passed": 50,
+  "run_id": "f6523936-0a07-4dd3-977c-850078fdc8ac",
+  "created_at": "2026-09-22T17:02:14.765606+00:00",
+  "total": 51,
+  "passed": 51,
   "failed": 0,
   "pass_rate": 1.0,
   "by_expect": {
     "grounded": {
-      "n": 42,
-      "passed": 42
+      "n": 43,
+      "passed": 43
     },
     "insufficient": {
       "n": 5,
@@ -33,13 +33,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        81,
-        9
+        9,
+        81
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.7,
+        "score": 0.8107,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -52,13 +52,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        31,
-        223
+        173,
+        219
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.83,
+        "score": 0.813,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -72,12 +72,12 @@
       "status": "grounded",
       "pages": [
         222,
-        173
+        253
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.8538,
+        "score": 0.8623,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 0.8
@@ -90,15 +90,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        162,
-        200
+        9,
+        162
       ],
       "passed": true,
-      "reasons": [
-        "page_soft_miss=[162, 200]"
-      ],
+      "reasons": [],
       "confidence": {
-        "score": 0.8853,
+        "score": 0.9263,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -112,7 +110,7 @@
       "status": "grounded",
       "pages": [
         9,
-        237
+        162
       ],
       "passed": true,
       "reasons": [],
@@ -131,12 +129,12 @@
       "status": "grounded",
       "pages": [
         82,
-        68
+        203
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.56,
+        "score": 0.6617,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 0.5
@@ -169,15 +167,15 @@
       "status": "grounded",
       "pages": [
         221,
-        131
+        220
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.6695,
+        "score": 0.5428,
         "method": "hybrid_rerank_v1",
         "level": "strong",
-        "coverage": 0.5
+        "coverage": 0.3333
       },
       "language": "hi"
     },
@@ -187,15 +185,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        206,
-        212
+        13,
+        209
       ],
       "passed": true,
-      "reasons": [
-        "page_soft_miss=[206, 212]"
-      ],
+      "reasons": [],
       "confidence": {
-        "score": 0.9256,
+        "score": 0.8999,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 0.6667
@@ -248,13 +244,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        172,
-        2
+        184,
+        175
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.7,
+        "score": 0.8211,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -286,13 +282,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        2,
-        167
+        167,
+        158
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.833,
+        "score": 0.8774,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -305,13 +301,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        2,
-        98
+        98,
+        101
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.9356,
+        "score": 0.76,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -324,13 +320,14 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        2,
-        127
+        126,
+        201,
+        202
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.7,
+        "score": 0.8097,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 1.0
@@ -435,18 +432,19 @@
       "id": "hi-dham",
       "question": "श्री गुरुशक्ति धाम क्या है?",
       "expect": "grounded",
-      "status": "grounded",
+      "status": "partial",
       "pages": [
-        256,
-        2
+        173,
+        204,
+        205
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.9144,
+        "score": 0.444,
         "method": "hybrid_rerank_v1",
-        "level": "strong",
-        "coverage": 1.0
+        "level": "partial",
+        "coverage": 0.3333
       },
       "language": "hi"
     },
@@ -514,15 +512,15 @@
       "status": "grounded",
       "pages": [
         252,
-        39
+        125
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.6619,
+        "score": 0.8079,
         "method": "hybrid_rerank_v1",
         "level": "strong",
-        "coverage": 0.5
+        "coverage": 0.6341
       },
       "language": "hi"
     },
@@ -532,13 +530,13 @@
       "expect": "grounded",
       "status": "partial",
       "pages": [
-        81,
-        9
+        9,
+        81
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.3733,
+        "score": 0.4628,
         "method": "hybrid_rerank_v1",
         "level": "partial",
         "coverage": 0.3333
@@ -551,16 +549,16 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        2,
-        154
+        154,
+        175
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.6139,
+        "score": 0.8467,
         "method": "hybrid_rerank_v1",
         "level": "strong",
-        "coverage": 0.4
+        "coverage": 0.6
       },
       "language": "hi"
     },
@@ -568,18 +566,18 @@
       "id": "hg-guru",
       "question": "guru kya hota hai",
       "expect": "grounded",
-      "status": "partial",
+      "status": "grounded",
       "pages": [
-        60,
-        173
+        173,
+        219
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.484,
+        "score": 0.508,
         "method": "hybrid_rerank_v1",
-        "level": "partial",
-        "coverage": 0.3333
+        "level": "strong",
+        "coverage": 0.4
       },
       "language": "hinglish"
     },
@@ -587,7 +585,7 @@
       "id": "hg-restless",
       "question": "mera man bahut restless hai, kya karun",
       "expect": "grounded",
-      "status": "partial",
+      "status": "grounded",
       "pages": [
         221,
         220
@@ -595,10 +593,10 @@
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.3854,
+        "score": 0.5276,
         "method": "hybrid_rerank_v1",
-        "level": "partial",
-        "coverage": 0.2258
+        "level": "strong",
+        "coverage": 0.3333
       },
       "language": "hinglish"
     },
@@ -606,7 +604,7 @@
       "id": "hg-dhyan",
       "question": "samarpan dhyan kya hai",
       "expect": "grounded",
-      "status": "partial",
+      "status": "grounded",
       "pages": [
         9,
         162
@@ -614,10 +612,10 @@
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.4954,
+        "score": 0.5744,
         "method": "hybrid_rerank_v1",
-        "level": "partial",
-        "coverage": 0.3333
+        "level": "strong",
+        "coverage": 0.4
       },
       "language": "hinglish"
     },
@@ -628,7 +626,7 @@
       "status": "grounded",
       "pages": [
         253,
-        250
+        254
       ],
       "passed": true,
       "reasons": [],
@@ -665,13 +663,13 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        81,
-        9
+        9,
+        81
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.56,
+        "score": 0.6289,
         "method": "hybrid_rerank_v1",
         "level": "strong",
         "coverage": 0.5
@@ -685,7 +683,7 @@
       "status": "grounded",
       "pages": [
         82,
-        68
+        203
       ],
       "passed": true,
       "reasons": [],
@@ -722,16 +720,16 @@
       "expect": "grounded",
       "status": "grounded",
       "pages": [
-        253,
-        222
+        222,
+        253
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.5181,
+        "score": 0.7013,
         "method": "hybrid_rerank_v1",
         "level": "strong",
-        "coverage": 0.3333
+        "coverage": 0.4706
       },
       "language": "gu"
     },
@@ -739,18 +737,18 @@
       "id": "gu-script",
       "question": "સમર્પણ એટલે શું?",
       "expect": "grounded",
-      "status": "partial",
+      "status": "grounded",
       "pages": [
-        81,
-        9
+        9,
+        81
       ],
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.337,
+        "score": 0.6093,
         "method": "hybrid_rerank_v1",
-        "level": "partial",
-        "coverage": 0.25
+        "level": "strong",
+        "coverage": 0.5
       },
       "language": "gu"
     },
@@ -758,7 +756,7 @@
       "id": "gu-dhyan",
       "question": "dhyan shu che?",
       "expect": "grounded",
-      "status": "partial",
+      "status": "grounded",
       "pages": [
         9,
         162
@@ -766,10 +764,10 @@
       "passed": true,
       "reasons": [],
       "confidence": {
-        "score": 0.317,
+        "score": 0.6096,
         "method": "hybrid_rerank_v1",
-        "level": "partial",
-        "coverage": 0.25
+        "level": "strong",
+        "coverage": 0.5
       },
       "language": "gu"
     },
@@ -940,6 +938,24 @@
         "method": "hybrid_rerank_v1",
         "level": "partial",
         "coverage": 0.25
+      },
+      "language": "en"
+    },
+    {
+      "id": "en-dev-danav",
+      "question": "what is dev tattva and danav tattva?",
+      "expect": "grounded",
+      "status": "grounded",
+      "pages": [
+        219
+      ],
+      "passed": true,
+      "reasons": [],
+      "confidence": {
+        "score": 0.54,
+        "method": "hybrid_rerank_v1",
+        "level": "strong",
+        "coverage": 0.4286
       },
       "language": "en"
     }

@@ -3,6 +3,8 @@ import { useSearchParams } from "react-router-dom";
 import { ask, type Answer } from "../api";
 import AnswerCard from "../components/AnswerCard";
 
+const inflight = new Set<string>();
+
 const STAGES = [
   "Searching Aadhyatmik Satya…",
   "Finding relevant pages…",
@@ -10,7 +12,7 @@ const STAGES = [
   "Preparing grounded response…",
 ];
 
-type Turn = { question: string; answer?: Answer; error?: string };
+type Turn = { id: string; question: string; answer?: Answer; error?: string };
 
 export default function Ask() {
   const [params] = useSearchParams();
@@ -37,16 +39,19 @@ export default function Ask() {
 
   async function submit(question: string) {
     const text = question.trim();
-    if (!text || busy) return;
+    if (!text || inflight.has(text)) return;
+    inflight.add(text);
+    const id = crypto.randomUUID();
     setBusy(true);
-    setTurns((t) => [...t, { question: text }]);
+    setTurns((t) => [...t, { id, question: text }]);
     try {
       const answer = await ask(text);
-      setTurns((t) => t.map((turn, i) => (i === t.length - 1 ? { ...turn, answer } : turn)));
+      setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, answer } : turn)));
     } catch (err) {
       const message = err instanceof Error ? err.message : "Request failed";
-      setTurns((t) => t.map((turn, i) => (i === t.length - 1 ? { ...turn, error: message } : turn)));
+      setTurns((t) => t.map((turn) => (turn.id === id ? { ...turn, error: message } : turn)));
     } finally {
+      inflight.delete(text);
       setBusy(false);
       setQ("");
     }
@@ -61,7 +66,9 @@ export default function Ask() {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <p className="kicker">Ask</p>
       <h1 className="mt-2 font-dev text-4xl text-maroon">अपना प्रश्न ग्रंथ के पास लाएँ</h1>
-      <p className="mt-2 text-[#5c4e43]">Hindi, English, Gujarati, Hinglish — the quotation stays in the granth’s language.</p>
+      <p className="mt-2 text-[#5c4e43]">
+        Hindi, Gujarati, English, Hinglish, or roman script. The quotation stays in the granth’s language.
+      </p>
       <form onSubmit={onSubmit} className="mt-6 flex flex-col gap-3 sm:flex-row">
         <input
           value={q}
@@ -75,11 +82,11 @@ export default function Ask() {
       </form>
 
       <div className="mt-8 space-y-8">
-        {turns.map((turn, i) => (
-          <section key={i}>
+        {turns.map((turn) => (
+          <section key={turn.id}>
             <p className="text-sm text-[#8a7564]">प्रश्न</p>
             <h2 className="font-dev text-2xl">{turn.question}</h2>
-            {busy && i === turns.length - 1 && !turn.answer && !turn.error && (
+            {busy && turn.id === turns[turns.length - 1]?.id && !turn.answer && !turn.error && (
               <ol className="mt-4 space-y-1 text-sm text-[#5c4e43]">
                 {STAGES.map((s, idx) => (
                   <li key={s} className={idx <= stage ? "text-maroon" : "opacity-40"}>
