@@ -1,0 +1,1 @@
+"""Aadhyatmik Satya AI backend."""
